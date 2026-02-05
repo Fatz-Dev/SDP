@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Hash;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProfileController extends Controller
 {
@@ -15,6 +17,11 @@ class ProfileController extends Controller
     {
         $username = session('username');
         $user = \App\Models\User::where('username', $username)->first();
+
+        if (!$user) {
+            session()->flush();
+            return redirect()->route('login')->withErrors(['error' => 'Data pengguna tidak ditemukan. Silakan login kembali.']);
+        }
 
         if ($user->role === 'pegawai') {
             return view('pages.pegawai.profile.index', compact('user'));
@@ -101,5 +108,27 @@ class ProfileController extends Controller
         }
 
         return back()->withErrors(['current_password' => 'Password saat ini salah.']);
+    }
+
+    public function exportPdf()
+    {
+        $username = session('username');
+        $user = \App\Models\User::where('username', $username)->first();
+
+        if (!$user) {
+            return back()->withErrors(['error' => 'Data pengguna tidak ditemukan.']);
+        }
+
+        $settings = [
+            'office_name' => Setting::where('key', 'office_name')->value('value') ?? 'SIDAPEG',
+            'office_address' => Setting::where('key', 'office_address')->value('value') ?? 'Alamat Belum Diatur',
+            'office_phone' => Setting::where('key', 'office_phone')->value('value') ?? '-',
+            'office_email' => Setting::where('key', 'office_email')->value('value') ?? '-',
+        ];
+
+        $pdf = Pdf::loadView('pages.pegawai.profile.profile-pdf', compact('user', 'settings'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('Biodata_' . str_replace(' ', '_', $user->name) . '_' . date('Ymd') . '.pdf');
     }
 }

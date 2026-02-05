@@ -24,6 +24,7 @@ Route::middleware(['auth.admin'])->group(function () {
 
     // Shared Profile
     Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/export-pdf', [\App\Http\Controllers\Admin\ProfileController::class, 'exportPdf'])->name('profile.exportPdf');
     Route::post('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [\App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
 
@@ -86,6 +87,7 @@ Route::middleware(['auth.admin'])->group(function () {
 
         // Employee Management (Shared/Admin focus)
         Route::get('/export', [\App\Http\Controllers\Pegawai\PegawaiController::class, 'export'])->name('pegawai.export');
+        Route::get('/export-pdf', [\App\Http\Controllers\Pegawai\PegawaiController::class, 'exportPdf'])->name('pegawai.exportPdf');
         Route::get('/search', [\App\Http\Controllers\Pegawai\PegawaiController::class, 'search'])->name('pegawai.search');
         Route::resource('data', \App\Http\Controllers\Pegawai\PegawaiController::class)->parameters([
             'data' => 'pegawai'

@@ -19,6 +19,15 @@ class CheckAdminSession
             return redirect()->route('login');
         }
 
+        // Pastikan user masih ada di database (mencegah error if user deleted but session exists)
+        $username = session('username');
+        $userExists = \App\Models\User::where('username', $username)->exists();
+
+        if (!$userExists) {
+            session()->flush();
+            return redirect()->route('login')->withErrors(['error' => 'Sesi Anda telah berakhir atau akun tidak ditemukan.']);
+        }
+
         return $next($request);
     }
 }

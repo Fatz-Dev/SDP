@@ -13,6 +13,9 @@
                 <a href="{{ route('pegawai.export') }}" class="btn btn-outline-success shadow-sm">
                     <i class="fas fa-file-excel me-1"></i> Export Excel
                 </a>
+                <a href="{{ route('pegawai.exportPdf') }}" class="btn btn-outline-danger shadow-sm">
+                    <i class="fas fa-file-pdf me-1"></i> Export PDF
+                </a>
                 <a href="{{ route('pegawai.create') }}" class="btn btn-primary shadow-sm">
                     <i class="fas fa-plus-circle me-1"></i> Tambah Pegawai
                 </a>

@@ -7,18 +7,18 @@
             <p class="text-muted">Kelola informasi pribadi dan pengaturan keamanan Anda.</p>
         </div>
 
-        @if(session('success'))
+        @if (session('success'))
             <div class="alert alert-success border-0 shadow-sm mb-4"
                 style="background: #e8f5e9; color: #2e7d32; border-radius: 12px;">
                 <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
             </div>
         @endif
 
-        @if($errors->any())
+        @if ($errors->any())
             <div class="alert alert-danger border-0 shadow-sm mb-4"
                 style="background: #ffebee; color: #c62828; border-radius: 12px;">
                 <ul class="mb-0 list-unstyled">
-                    @foreach($errors->all() as $error)
+                    @foreach ($errors->all() as $error)
                         <li><i class="fas fa-exclamation-circle me-2"></i> {{ $error }}</li>
                     @endforeach
                 </ul>
@@ -30,7 +30,7 @@
             <div class="col-md-4">
                 <div class="card p-4 text-center shadow-sm border-0 mb-4" style="border-radius: 20px;">
                     <div class="user-avatar-large mb-3 mx-auto position-relative overflow-hidden">
-                        @if($user && $user->foto && file_exists(public_path('assets/img/users/' . $user->foto)))
+                        @if ($user && $user->foto && file_exists(public_path('assets/img/users/' . $user->foto)))
                             <img src="{{ asset('assets/img/users/' . $user->foto) }}" id="avatar-preview"
                                 class="w-100 h-100 object-fit-cover">
                         @else
@@ -67,7 +67,7 @@
                             <div>
                                 <small class="text-muted d-block">Tanggal Bergabung</small>
                                 <span
-                                    class="fw-bold">{{ (isset($user) && $user->created_at) ? $user->created_at->format('d M Y') : date('d M Y') }}</span>
+                                    class="fw-bold">{{ isset($user) && $user->created_at ? $user->created_at->format('d M Y') : date('d M Y') }}</span>
                             </div>
                         </div>
                     </div>
@@ -82,7 +82,8 @@
                     <form action="{{ route('profile.update') }}" method="POST" id="profile-form"
                         enctype="multipart/form-data">
                         @csrf
-                        <input type="file" name="foto" id="avatar-input" class="d-none" onchange="previewAvatar(this)">
+                        <input type="file" name="foto" id="avatar-input" class="d-none"
+                            onchange="previewAvatar(this)">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold text-muted">Nama Lengkap</label>
@@ -102,7 +103,7 @@
                         </div>
 
                         <div class="text-end mt-3">
-                            <a href="" class="btn btn-secondary px-4 shadow">
+                            <a href="{{ route('profile.exportPdf') }}" class="btn btn-secondary px-4 shadow">
                                 <i class="fas fa-download me-2"></i> Download PDF
                             </a>
                             <button type="submit" class="btn btn-primary px-4 shadow">
@@ -114,33 +115,33 @@
 
                 <!-- Change Password Card -->
                 <!-- <div class="card p-4 shadow-sm border-0 mb-4" style="border-radius: 20px;">
-                                    <h4 class="mb-4 text-pink"><i class="fas fa-lock"></i> Security Settings</h4>
-                                    <form action="{{ route('profile.updatePassword') }}" method="POST">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="col-md-12 mb-3">
-                                                <label class="form-label fw-bold text-muted">Current Password</label>
-                                                <input type="password" name="current_password" class="form-control border-pink-light"
-                                                    style="border-radius: 10px;">
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label fw-bold text-muted">New Password</label>
-                                                <input type="password" name="new_password" class="form-control border-pink-light"
-                                                    style="border-radius: 10px;">
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label fw-bold text-muted">Confirm New Password</label>
-                                                <input type="password" name="new_password_confirmation"
-                                                    class="form-control border-pink-light" style="border-radius: 10px;">
-                                            </div>
-                                        </div>
-                                        <div class="text-end">
-                                            <button type="submit" class="btn btn-outline-pink px-4">
-                                                Update Password
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div> -->
+                                            <h4 class="mb-4 text-pink"><i class="fas fa-lock"></i> Security Settings</h4>
+                                            <form action="{{ route('profile.updatePassword') }}" method="POST">
+                                                @csrf
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label class="form-label fw-bold text-muted">Current Password</label>
+                                                        <input type="password" name="current_password" class="form-control border-pink-light"
+                                                            style="border-radius: 10px;">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label fw-bold text-muted">New Password</label>
+                                                        <input type="password" name="new_password" class="form-control border-pink-light"
+                                                            style="border-radius: 10px;">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label fw-bold text-muted">Confirm New Password</label>
+                                                        <input type="password" name="new_password_confirmation"
+                                                            class="form-control border-pink-light" style="border-radius: 10px;">
+                                                    </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button type="submit" class="btn btn-outline-pink px-4">
+                                                        Update Password
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div> -->
             </div>
         </div>
     </div>
@@ -206,7 +207,7 @@
         function previewAvatar(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     var preview = document.getElementById('avatar-preview');
                     var icon = document.getElementById('avatar-icon');
 

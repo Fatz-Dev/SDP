@@ -287,6 +287,16 @@ sudo chmod -R 775 storage bootstrap/cache
 **Q: Kenapa akurasi GPS sering melesat jauh (lebih dari 100 meter)?**
 A: Akurasi sangat bergantung pada hardware dan kondisi sinyal perangkat. Disarankan menggunakan radius minimal **100 meter** untuk mengakomodasi deviasi sinyal GPS di area urban atau dalam gedung.
 
+**Q: Error `Allowed memory size of ... bytes exhausted` saat install DomPDF?**
+A: DomPDF dan dependensinya membutuhkan resource yang cukup besar saat proses `composer update`. Jika terjadi error memory atau proses hang, jalankan perintah berikut:
+```bash
+php -d memory_limit=-1 C:\ProgramData\ComposerSetup\bin\composer.phar update barryvdh/laravel-dompdf
+```
+*(Sesuaikan path `composer.phar` dengan lokasi instalasi Composer Anda).*
+
+**Q: Kenapa saya tidak perlu khawatir lagi saat melakukan `git clone` di masa depan?**
+A: Saya telah memperbarui file `composer.lock`. Sekarang, paket `barryvdh/laravel-dompdf` sudah terdaftar secara resmi di dalam "lock file". Artinya, saat Anda atau pengembang lain menjalankan `composer install` setelah melakukan clone, Composer tidak akan lagi menghitung dependensi dari nol (yang memakan banyak memory), melainkan akan langsung mengunduh versi yang sudah pasti berhasil diinstal.
+
 **Q: Saya ingin menambahkan status absensi baru (contoh: 'Perjalanan Dinas')?**
 1. Update constraint akun enum di file migrasi `create_absensis_table`.
 2. Tambahkan logika pengolahan warna badge di file `Admin/AbsensiController` dan `dashboard.admin`.

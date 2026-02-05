@@ -11,6 +11,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use App\Models\Setting;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PegawaiController extends Controller
 {
@@ -274,5 +276,20 @@ class PegawaiController extends Controller
 
         $writer->save('php://output');
         exit;
+    public function exportPdf()
+    {
+        $pegawai = User::where('role', 'pegawai')->get();
+
+        $settings = [
+            'office_name' => Setting::where('key', 'office_name')->value('value') ?? 'SIDAPEG',
+            'office_address' => Setting::where('key', 'office_address')->value('value') ?? 'Alamat Belum Diatur',
+            'office_phone' => Setting::where('key', 'office_phone')->value('value') ?? '-',
+            'office_email' => Setting::where('key', 'office_email')->value('value') ?? '-',
+        ];
+
+        $pdf = Pdf::loadView('pages.admin.pegawai.export-pdf', compact('pegawai', 'settings'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('Data_Pegawai_SIDAPEG_' . date('Ymd_His') . '.pdf');
     }
 }
