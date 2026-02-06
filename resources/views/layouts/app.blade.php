@@ -54,20 +54,32 @@
             transition: all 0.3s ease;
         }
 
-        .logo {
-            text-align: center;
-            border-bottom: 2px solid var(--pink-light);
-            /* margin-bottom: 30px; */
+        .logo-container {
+            padding: 0 15px;
+            margin-bottom: 10px;
         }
 
-        .logo h2 {
-            color: var(--pink-darker);
-            font-size: 24px;
+        .logo-img-tailwind {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .logo p {
-            color: var(--pink-dark);
-            font-size: 14px;
+        .logo-container:hover .logo-img-tailwind {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        .brand-name-tailwind {
+            color: #1e293b;
+            /* Tailwind Slate 800 */
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .nav-links {

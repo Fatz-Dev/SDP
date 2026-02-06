@@ -23,7 +23,7 @@
             text-transform: uppercase;
             margin: 0;
             font-size: 18pt;
-            color: #1a237e;
+            color: #000000;
         }
 
         .header p {

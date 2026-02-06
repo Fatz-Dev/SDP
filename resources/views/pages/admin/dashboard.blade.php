@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <!-- Dashboard Header -->
         <div class="page-header">
-            <h1><i class="fas fa-tachometer-alt"></i> Panel Utama</h1>
+            <h1>Dashboard Admin</h1>
             <div class="d-none">
                 <!-- Hidden logout since layout doesn't have it in header yet, but we have it in user-info footer -->
                 <form method="POST" action="{{ route('logout') }}" id="header-logout">@csrf</form>

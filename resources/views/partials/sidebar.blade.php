@@ -1,8 +1,13 @@
 <div class="sidebar">
-    <div class="logo">
-        <h2><i class="fas fa-heart"></i> AdminKu</h2>
-        <p>Sistem Manajemen</p>
+    <div class="logo-container">
+        <a href="{{ session('role') == 'admin' ? route('dashboard.admin') : route('dashboard.pegawai') }}"
+            class="d-flex align-items-center justify-content-center text-decoration-none py-3">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo-img-tailwind me-2">
+            <h1 class="brand-name-tailwind m-0">SIDAPEG</h1>
+        </a>
     </div>
+
+    <hr class="">
 
     <ul class="nav-links">
         <li>
@@ -31,7 +36,8 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('settings.index') }}" class="{{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                <a href="{{ route('settings.index') }}"
+                    class="{{ request()->routeIs('settings.*') ? 'active' : '' }}">
                     <i class="fas fa-cog"></i> Pengaturan Lokasi
                 </a>
             </li>

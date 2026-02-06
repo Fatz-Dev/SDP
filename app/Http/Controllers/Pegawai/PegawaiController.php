@@ -188,20 +188,47 @@ class PegawaiController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Data Pegawai');
 
-        // Header Table
+        // ===========================================
+        // MAIN TITLE (Row 1 & 2)
+        // ===========================================
+        $sheet->setCellValue('A1', 'REKAPITULASI DATA PEGAWAI');
+        $sheet->setCellValue('A2', 'SISTEM INFORMASI DATA PEGAWAI (SIDAPEG)');
+
+        $sheet->mergeCells('A1:L1');
+        $sheet->mergeCells('A2:L2');
+
+        $titleStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 16,
+                'color' => ['argb' => '000000'], // Hitam
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+        ];
+
+        $sheet->getStyle('A1:L2')->applyFromArray($titleStyle);
+        $sheet->getRowDimension(1)->setRowHeight(30);
+        $sheet->getRowDimension(2)->setRowHeight(25);
+
+        // ===========================================
+        // TABLE HEADERS (Row 4)
+        // ===========================================
         $headers = [
-            'A1' => 'NIP',
-            'B1' => 'Nama Lengkap',
-            'C1' => 'Jenis Kelamin',
-            'D1' => 'Tempat Lahir',
-            'E1' => 'Tanggal Lahir',
-            'F1' => 'Jabatan',
-            'G1' => 'Unit Kerja',
-            'H1' => 'Status Pegawai',
-            'I1' => 'Tanggal Masuk',
-            'J1' => 'Email',
-            'K1' => 'No HP',
-            'L1' => 'Alamat'
+            'A4' => 'NO',
+            'B4' => 'NIP',
+            'C4' => 'NAMA LENGKAP',
+            'D4' => 'JABATAN',
+            'E4' => 'UNIT KERJA',
+            'F4' => 'STATUS',
+            'G4' => 'JENIS KELAMIN',
+            'H4' => 'TEMPAT LAHIR',
+            'I4' => 'TANGGAL LAHIR',
+            'J4' => 'TANGGAL MASUK',
+            'K4' => 'NO HP',
+            'L4' => 'ALAMAT'
         ];
 
         foreach ($headers as $cell => $value) {
@@ -212,15 +239,11 @@ class PegawaiController extends Controller
         $headerStyle = [
             'font' => [
                 'bold' => true,
-                'color' => ['argb' => 'FFFFFFFF'],
+                'color' => ['argb' => '000000'],
             ],
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
                 'vertical' => Alignment::VERTICAL_CENTER,
-            ],
-            'fill' => [
-                'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FF1E88E5'], // Blue UI color
             ],
             'borders' => [
                 'allBorders' => [
@@ -228,38 +251,44 @@ class PegawaiController extends Controller
                 ],
             ],
         ];
-        $sheet->getStyle('A1:L1')->applyFromArray($headerStyle);
-        $sheet->getRowDimension(1)->setRowHeight(25);
 
-        // Data Pegawai
+        $sheet->getStyle('A4:L4')->applyFromArray($headerStyle);
+        $sheet->getRowDimension(4)->setRowHeight(25);
+
+        // ===========================================
+        // DATA PEGAWAI (Starts from Row 5)
+        // ===========================================
         $pegawai = User::where('role', 'pegawai')->get();
-        $row = 2;
+        $row = 5;
+        $no = 1;
 
         foreach ($pegawai as $p) {
-            // Force NIP and HP as String to prevent Scientific Notation (1.9E+11)
-            $sheet->setCellValueExplicit('A' . $row, $p->nip, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-            $sheet->setCellValue('B' . $row, $p->name);
-            $sheet->setCellValue('C' . $row, $p->jenis_kelamin);
-            $sheet->setCellValue('D' . $row, $p->tempat_lahir);
-            $sheet->setCellValue('E' . $row, $p->tanggal_lahir);
-            $sheet->setCellValue('F' . $row, $p->jabatan);
-            $sheet->setCellValue('G' . $row, $p->unit_kerja);
-            $sheet->setCellValue('H' . $row, $p->status_pegawai);
-            $sheet->setCellValue('I' . $row, $p->tanggal_masuk);
-            $sheet->setCellValue('J' . $row, $p->email);
-            // Force HP as String
+            $sheet->setCellValue('A' . $row, $no++);
+            $sheet->setCellValueExplicit('B' . $row, $p->nip, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue('C' . $row, $p->name);
+            $sheet->setCellValue('D' . $row, $p->jabatan);
+            $sheet->setCellValue('E' . $row, $p->unit_kerja);
+            $sheet->setCellValue('F' . $row, $p->status_pegawai);
+            $sheet->setCellValue('G' . $row, $p->jenis_kelamin);
+            $sheet->setCellValue('H' . $row, $p->tempat_lahir);
+            $sheet->setCellValue('I' . $row, $p->tanggal_lahir ? date('d-m-Y', strtotime($p->tanggal_lahir)) : '-');
+            $sheet->setCellValue('J' . $row, $p->tanggal_masuk ? date('d-m-Y', strtotime($p->tanggal_masuk)) : '-');
             $sheet->setCellValueExplicit('K' . $row, $p->no_hp, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
             $sheet->setCellValue('L' . $row, $p->alamat);
 
-            // Alignment for data
+            // Alignment and Borders for each row
             $sheet->getStyle('A' . $row . ':L' . $row)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+            $sheet->getStyle('A' . $row . ':L' . $row)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+            // Alternating Row Colors
+            if ($row % 2 == 0) {
+                $sheet->getStyle('A' . $row . ':L' . $row)->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()->setARGB('FFF5F5F5');
+            }
 
             $row++;
         }
-
-        // Apply Borders to all data
-        $contentRange = 'A1:L' . ($row - 1);
-        $sheet->getStyle($contentRange)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
         // Auto Size Columns
         foreach (range('A', 'L') as $columnID) {
@@ -267,7 +296,7 @@ class PegawaiController extends Controller
         }
 
         // Export as Xlsx
-        $fileName = 'Data_Pegawai_SIDAPEG_' . date('Ymd_His') . '.xlsx';
+        $fileName = 'Rekap_Pegawai_SIDAPEG_' . date('Ymd_His') . '.xlsx';
         $writer = new Xlsx($spreadsheet);
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -276,6 +305,8 @@ class PegawaiController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
+
     public function exportPdf()
     {
         $pegawai = User::where('role', 'pegawai')->get();
