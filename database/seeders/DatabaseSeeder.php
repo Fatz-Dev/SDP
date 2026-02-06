@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Administrator',
             'username' => 'admin',
             'email' => 'admin@sidapeg.com',
-            'password' => 'password123',  
+            'password' => 'password123',
             'jabatan' => 'Administrator',
             'unit_kerja' => 'IT Center',
             'status_pegawai' => 'ASN',
@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
         // ===========================================
         $this->call([
             UserPegawaiSeeder::class,
+            SettingProfessionalSeeder::class
         ]);
 
         // ===========================================

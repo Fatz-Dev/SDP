@@ -40,7 +40,7 @@ class UserPegawaiSeeder extends Seeder
                 'name' => $name,
                 'username' => $username,
                 'email' => $faker->unique()->safeEmail,
-                'password' => Hash::make('pegawai123'), // Default password
+                'password' => Hash::make('password123'), // Default password
                 'jabatan' => $jabatan,
                 'unit_kerja' => 'Bagian Umum dan Kepegawaian',
                 'status_pegawai' => 'ASN',

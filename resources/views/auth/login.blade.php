@@ -55,20 +55,34 @@
         }
 
         .logo {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 30px;
+            gap: 12px;
         }
 
-        .logo i {
-            font-size: 50px;
-            color: var(--pink-dark);
-            margin-bottom: 10px;
+        .logo img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover img {
+            transform: scale(1.1) rotate(-5deg);
         }
 
         .logo h1 {
             color: var(--pink-darker);
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin: 0;
+            background: linear-gradient(135deg, var(--pink-dark), var(--pink-darker));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .login-form h2 {
@@ -176,7 +190,7 @@
 <body>
     <div class="login-container">
         <div class="logo">
-            <i class="fas fa-user-circle"></i>
+            <img src="{{ asset('images/logo.png') }}" alt="Logo">
             <h1>SIDAPEG</h1>
         </div>
 
@@ -212,7 +226,7 @@
                 <p>Test Credentials:</p>
                 <p>Email (Admin): <strong>admin@sidapeg.com</strong></p>
                 <p>Email (Pegawai): <strong>budi@sidapeg.com</strong></p>
-                <p>Password: <strong>password</strong></p>
+                <p>Password: <strong>password123</strong></p>
                 <p style="margin-top: 10px;">Made with <span class="heart">💙</span></p>
             </div>
         </div>
